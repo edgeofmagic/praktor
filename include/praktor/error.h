@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_ERROR_H
-#define ASYNC_ERROR_H
+#ifndef PRAKTOR_ERROR_H
+#define PRAKTOR_ERROR_H
 
 #include <system_error>
 
@@ -61,7 +61,7 @@ make_error_code(errc e);
 
 }    // namespace address_info
 
-namespace async
+namespace praktor
 {
 
 enum class errc
@@ -88,13 +88,13 @@ make_error_condition(errc e);
 std::error_code
 make_error_code(errc e);
 
-}    // namespace async
+}    // namespace praktor
 
 namespace std
 {
 
 template<>
-struct is_error_condition_enum<async::errc> : public true_type
+struct is_error_condition_enum<praktor::errc> : public true_type
 {};
 
 template<>
@@ -103,4 +103,4 @@ struct is_error_condition_enum<address_info::errc> : public true_type
 
 }    // namespace std
 
-#endif    // ASYNC_ERROR_H
+#endif    // PRAKTOR_ERROR_H

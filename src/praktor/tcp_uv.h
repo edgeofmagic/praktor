@@ -22,26 +22,26 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_TCP_UV_H
-#define ASYNC_TCP_UV_H
+#ifndef PRAKTOR_TCP_UV_H
+#define PRAKTOR_TCP_UV_H
 
 #include "uv_error.h"
 #include <boost/endian/conversion.hpp>
-#include <async/endpoint.h>
-#include <async/options.h>
-#include <async/tcp.h>
+#include <praktor/endpoint.h>
+#include <praktor/options.h>
+#include <praktor/tcp.h>
 #include <uv.h>
 
 class tcp_channel_uv;
 class tcp_acceptor_uv;
 
-using async::ip::endpoint;
+using praktor::ip::endpoint;
 using util::mutable_buffer;
 
 /** \brief Wraps a libuv connect request object (uv_connect_t).
  * 
  * This class wraps a libuv connect request object (uv_connect_t),
- * holding a callable object of type async::channel::connect_handler
+ * holding a callable object of type praktor::channel::connect_handler
  * that will be invoked when the connect request completes.
  * 
  */
@@ -52,10 +52,10 @@ public:
 	 * 
 	 * Constructs an instance of connect_request_uv.
 	 * 
-	 * \param handler a callable object that is convertible to async::channel::connect_handler, 
+	 * \param handler a callable object that is convertible to praktor::channel::connect_handler, 
 	 * which will be invoked when the request completes.
 	 */
-	connect_request_uv(async::channel::connect_handler handler) : m_handler{std::move(handler)}
+	connect_request_uv(praktor::channel::connect_handler handler) : m_handler{std::move(handler)}
 	{
 		// make sure the compiler is doing the expected thing
 		assert(reinterpret_cast<uv_connect_t*>(this) == &m_uv_connect_request);
@@ -86,7 +86,7 @@ public:
 
 private:
 	uv_connect_t                               m_uv_connect_request;
-	async::channel::connect_handler m_handler;
+	praktor::channel::connect_handler m_handler;
 
 	static util::shared_ptr<tcp_channel_uv>
 	get_channel_shared_ptr(uv_connect_t* req);
@@ -95,7 +95,7 @@ private:
 class tcp_write_buf_req_uv
 {
 public:
-	tcp_write_buf_req_uv(mutable_buffer&& buf, async::channel::write_buffer_handler handler)
+	tcp_write_buf_req_uv(mutable_buffer&& buf, praktor::channel::write_buffer_handler handler)
 		: m_write_handler{std::move(handler)},
 		  m_buffer{std::move(buf)},
 		  m_uv_buffer{reinterpret_cast<char*>(m_buffer.data()), m_buffer.size()}
@@ -122,14 +122,14 @@ private:
 	uv_write_t                                      m_uv_write_request;
 	mutable_buffer                                  m_buffer;
 	uv_buf_t                                        m_uv_buffer;
-	async::channel::write_buffer_handler m_write_handler;
+	praktor::channel::write_buffer_handler m_write_handler;
 };
 
 
 class tcp_write_bufs_req_uv
 {
 public:
-	tcp_write_bufs_req_uv(std::deque<mutable_buffer>&& bufs, async::channel::write_buffers_handler handler)
+	tcp_write_bufs_req_uv(std::deque<mutable_buffer>&& bufs, praktor::channel::write_buffers_handler handler)
 		: m_write_handler{std::move(handler)},
 		  m_buffers{std::move(bufs)},
 		  m_uv_buffers{new uv_buf_t[m_buffers.size()]}
@@ -170,7 +170,7 @@ private:
 	uv_write_t                                       m_uv_write_request;
 	std::deque<mutable_buffer>                       m_buffers;
 	uv_buf_t*                                        m_uv_buffers;
-	async::channel::write_buffers_handler m_write_handler;
+	praktor::channel::write_buffers_handler m_write_handler;
 };
 
 class tcp_base_uv
@@ -270,7 +270,7 @@ protected:
 		return reinterpret_cast<uv_handle_t*>(&m_tcp_handle);
 	}
 
-	std::shared_ptr<async::loop>
+	std::shared_ptr<praktor::loop>
 	get_loop();
 
 	virtual void
@@ -288,7 +288,7 @@ protected:
 	uv_tcp_t    m_tcp_handle;
 };
 
-class tcp_channel_uv : public tcp_base_uv, public async::tcp_channel
+class tcp_channel_uv : public tcp_base_uv, public praktor::tcp_channel
 {
 public:
 	using ptr = util::shared_ptr<tcp_channel_uv>;
@@ -297,7 +297,7 @@ public:
 	init(uv_loop_t* lp, ptr const& self, std::error_code& err);
 
 	void
-	connect(async::ip::endpoint const& ep, std::error_code& err, async::channel::connect_handler handler)
+	connect(praktor::ip::endpoint const& ep, std::error_code& err, praktor::channel::connect_handler handler)
 	{
 		err.clear();
 		sockaddr_storage saddr;
@@ -349,7 +349,7 @@ public:
 	}
 
 	virtual void
-	set_close_handler(async::channel::close_handler&& handler) override
+	set_close_handler(praktor::channel::close_handler&& handler) override
 	{
 		m_close_handler = std::move(handler);
 	}
@@ -368,12 +368,12 @@ protected:
 	on_close(uv_handle_t* handle);
 
 	virtual void
-	really_start_read(std::error_code& err, async::channel::read_handler&& handler) override;
+	really_start_read(std::error_code& err, praktor::channel::read_handler&& handler) override;
 
 	virtual void
 	stop_read() override;
 
-	virtual std::shared_ptr<async::loop>
+	virtual std::shared_ptr<praktor::loop>
 	loop() override
 	{
 		return get_loop();
@@ -383,7 +383,7 @@ protected:
 	is_closing() override;
 
 	virtual void
-	really_write(mutable_buffer&& buf, std::error_code& err, async::channel::write_buffer_handler&& handler)
+	really_write(mutable_buffer&& buf, std::error_code& err, praktor::channel::write_buffer_handler&& handler)
 			override;
 
 
@@ -391,16 +391,16 @@ protected:
 	really_write(
 			std::deque<mutable_buffer>&&                       bufs,
 			std::error_code&                                   err,
-			async::channel::write_buffers_handler&& handler) override;
+			praktor::channel::write_buffers_handler&& handler) override;
 
 	virtual bool
-	really_close(async::channel::close_handler&& handler) override;
+	really_close(praktor::channel::close_handler&& handler) override;
 
 	virtual bool
 	really_close() override;
 
-	async::channel::read_handler  m_read_handler;
-	async::channel::close_handler m_close_handler;
+	praktor::channel::read_handler  m_read_handler;
+	praktor::channel::close_handler m_close_handler;
 };
 
 class tcp_framed_channel_uv : public tcp_channel_uv
@@ -432,17 +432,17 @@ private:
 	on_read(uv_stream_t* stream_handle, ssize_t nread, const uv_buf_t* buf);
 
 	virtual void
-	really_start_read(std::error_code& err, async::channel::read_handler&& handler) override;
+	really_start_read(std::error_code& err, praktor::channel::read_handler&& handler) override;
 
 	virtual void
-	really_write(mutable_buffer&& buf, std::error_code& err, async::channel::write_buffer_handler&& handler)
+	really_write(mutable_buffer&& buf, std::error_code& err, praktor::channel::write_buffer_handler&& handler)
 			override;
 
 	virtual void
 	really_write(
 			std::deque<mutable_buffer>&&                       bufs,
 			std::error_code&                                   err,
-			async::channel::write_buffers_handler&& handler) override;
+			praktor::channel::write_buffers_handler&& handler) override;
 
 	void
 	read_to_frame(ptr channel_ptr, util::const_buffer&& buf);
@@ -466,7 +466,7 @@ private:
 	mutable_buffer       m_payload_buffer;
 };
 
-class tcp_acceptor_uv : public tcp_base_uv, public async::tcp_acceptor
+class tcp_acceptor_uv : public tcp_base_uv, public praktor::tcp_acceptor
 {
 public:
 	using ptr = util::shared_ptr<tcp_acceptor_uv>;
@@ -507,7 +507,7 @@ public:
 	}
 
 	virtual void
-	set_close_handler(async::acceptor::close_handler&& handler) override
+	set_close_handler(praktor::acceptor::close_handler&& handler) override
 	{
 		m_close_handler = std::move(handler);
 	}
@@ -545,27 +545,27 @@ private:
 	static void
 	on_framing_connection(uv_stream_t* handle, int stat);
 
-	virtual std::shared_ptr<async::loop>
+	virtual std::shared_ptr<praktor::loop>
 	loop() override
 	{
 		return get_loop();
 	}
 
 	virtual bool
-	really_close(async::acceptor::close_handler&& handler) override;
+	really_close(praktor::acceptor::close_handler&& handler) override;
 
 	virtual bool
 	really_close() override;
 
 	virtual void
-	really_bind(async::options const& opts, std::error_code& err) override;
+	really_bind(praktor::options const& opts, std::error_code& err) override;
 
 	virtual void
 	really_listen(std::error_code& err, connection_handler&& handler) override;
 
-	async::acceptor::connection_handler m_connection_handler;
-	async::acceptor::close_handler      m_close_handler;
+	praktor::acceptor::connection_handler m_connection_handler;
+	praktor::acceptor::close_handler      m_close_handler;
 	bool	m_is_framing;
 };
 
-#endif    // ASYNC_TCP_UV_H
+#endif    // PRAKTOR_TCP_UV_H

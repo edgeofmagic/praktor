@@ -24,7 +24,7 @@
 
 #include <doctest.h>
 #include <iostream>
-#include <async/loop.h>
+#include <praktor/loop.h>
 
 class stopwatch
 {
@@ -52,19 +52,19 @@ private:
 
 #if 1
 
-TEST_CASE("async::loop [ smoke ] { dispatch }")
+TEST_CASE("praktor::loop [ smoke ] { dispatch }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 
 	bool first_dispatch_called  = false;
 	bool second_dispatch_called = false;
 
-	lp->dispatch(err, [&](async::loop::ptr const& loop_ptr) {
+	lp->dispatch(err, [&](praktor::loop::ptr const& loop_ptr) {
 		first_dispatch_called = true;
-		loop_ptr->dispatch(err, [&](async::loop::ptr const& loop_ptr) {
+		loop_ptr->dispatch(err, [&](praktor::loop::ptr const& loop_ptr) {
 			second_dispatch_called = true;
-			auto loop_exit_timer   = loop_ptr->create_timer(err, [](async::timer::ptr tp) {
+			auto loop_exit_timer   = loop_ptr->create_timer(err, [](praktor::timer::ptr tp) {
                 std::error_code err;
                 tp->loop()->stop(err);
                 CHECK(!err);
@@ -82,14 +82,14 @@ TEST_CASE("async::loop [ smoke ] { dispatch }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop [ smoke ] { void dispatch }")
+TEST_CASE("praktor::loop [ smoke ] { void dispatch }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 
 	bool dispatch_called  = false;
 
-	auto loop_exit_timer   = lp->create_timer(err, [](async::timer::ptr tp) {
+	auto loop_exit_timer   = lp->create_timer(err, [](praktor::timer::ptr tp) {
 		std::error_code err;
 		tp->loop()->stop(err);
 		CHECK(!err);
@@ -108,12 +108,12 @@ TEST_CASE("async::loop [ smoke ] { void dispatch }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop [ smoke ] { basic }")
+TEST_CASE("praktor::loop [ smoke ] { basic }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 
-	lp->dispatch(err, [](async::loop::ptr const& loop_ptr) {
+	lp->dispatch(err, [](praktor::loop::ptr const& loop_ptr) {
 		std::error_code err;
 		loop_ptr->stop(err);
 		CHECK(!err);
@@ -125,15 +125,15 @@ TEST_CASE("async::loop [ smoke ] { basic }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop [ smoke ] { default loop }")
+TEST_CASE("praktor::loop [ smoke ] { default loop }")
 {
-	async::loop::ptr lp = async::loop::get_default();
+	praktor::loop::ptr lp = praktor::loop::get_default();
 	std::error_code  err;
 
 	bool first_visited{false};
 	bool second_visited{false};
 
-	lp->dispatch(err, [&](async::loop::ptr const& loop_ptr) {
+	lp->dispatch(err, [&](praktor::loop::ptr const& loop_ptr) {
 		first_visited = true;
 		std::error_code err;
 		loop_ptr->stop(err);
@@ -143,7 +143,7 @@ TEST_CASE("async::loop [ smoke ] { default loop }")
 	lp->run(err);
 	CHECK(!err);
 
-	lp->dispatch(err, [&](async::loop::ptr const& lp) {
+	lp->dispatch(err, [&](praktor::loop::ptr const& lp) {
 		second_visited = true;
 		std::error_code err;
 		lp->stop(err);
@@ -157,13 +157,13 @@ TEST_CASE("async::loop [ smoke ] { default loop }")
 	CHECK(second_visited);
 }
 
-TEST_CASE("async::loop::timer [ smoke ] { basic }")
+TEST_CASE("praktor::loop::timer [ smoke ] { basic }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 
 	{
-		auto tp = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+		auto tp = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 			CHECK(!timer_ptr->is_pending());
 			std::cout << "timer expired" << std::endl;
 			timer_ptr->loop()->stop(err);
@@ -181,9 +181,9 @@ TEST_CASE("async::loop::timer [ smoke ] { basic }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop::timer [ smoke ] { void timer }")
+TEST_CASE("praktor::loop::timer [ smoke ] { void timer }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 	bool timer_expired{false};
 
@@ -209,9 +209,9 @@ TEST_CASE("async::loop::timer [ smoke ] { void timer }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop::timer [ smoke ] { void timer handler on start }")
+TEST_CASE("praktor::loop::timer [ smoke ] { void timer handler on start }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 	bool timer_expired{false};
 
@@ -242,9 +242,9 @@ TEST_CASE("async::loop::timer [ smoke ] { void timer handler on start }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop::timer [ smoke ] { schedule void }")
+TEST_CASE("praktor::loop::timer [ smoke ] { schedule void }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
 	bool timer_expired{false};
 
@@ -265,14 +265,14 @@ TEST_CASE("async::loop::timer [ smoke ] { schedule void }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::loop::timer [ smoke ] { close before expire }")
+TEST_CASE("praktor::loop::timer [ smoke ] { close before expire }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
-	auto tp0 = lp->create_timer(err, [](async::timer::ptr timer_ptr) { std::cout << "timer 0 expired" << std::endl; });
+	auto tp0 = lp->create_timer(err, [](praktor::timer::ptr timer_ptr) { std::cout << "timer 0 expired" << std::endl; });
 	CHECK(!err);
 
-	auto tp1 = lp->create_timer(err, [](async::timer::ptr timer_ptr) {
+	auto tp1 = lp->create_timer(err, [](praktor::timer::ptr timer_ptr) {
 		std::error_code ec;
 		std::cout << "timer 1 expired" << std::endl;
 		auto my_loop = timer_ptr->loop();
@@ -290,21 +290,21 @@ TEST_CASE("async::loop::timer [ smoke ] { close before expire }")
 	std::cout << "loop run completed" << std::endl;
 }
 
-TEST_CASE("async::loop::timer [ smoke ] { stop before expire }")
+TEST_CASE("praktor::loop::timer [ smoke ] { stop before expire }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	std::error_code  err;
-	auto tp0 = lp->create_timer(err, [](async::timer::ptr timer_ptr) { std::cout << "timer 0 expired" << std::endl; });
+	auto tp0 = lp->create_timer(err, [](praktor::timer::ptr timer_ptr) { std::cout << "timer 0 expired" << std::endl; });
 	CHECK(!err);
 
-	auto tp1 = lp->create_timer(err, [=](async::timer::ptr timer_ptr) {
+	auto tp1 = lp->create_timer(err, [=](praktor::timer::ptr timer_ptr) {
 		std::error_code ec;
 		std::cout << "timer 1 expired" << std::endl;
 		tp0->stop(ec);
 		CHECK(!ec);
 	});
 
-	auto loop_exit = lp->create_timer(err, [&](async::timer::ptr timer_ptr) { timer_ptr->loop()->stop(err); });
+	auto loop_exit = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) { timer_ptr->loop()->stop(err); });
 	CHECK(!err);
 	tp0->start(std::chrono::milliseconds{400}, err);
 	CHECK(!err);
@@ -321,9 +321,9 @@ TEST_CASE("async::loop::timer [ smoke ] { stop before expire }")
 }
 #endif
 
-TEST_CASE("async::loop::timer [ smoke ] { close/cancel before expire }")
+TEST_CASE("praktor::loop::timer [ smoke ] { close/cancel before expire }")
 {
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	lp->schedule(std::chrono::milliseconds{200}, [=]() {
 		lp->stop();
 	});
@@ -338,13 +338,13 @@ TEST_CASE("async::loop::timer [ smoke ] { close/cancel before expire }")
 	bool tp0_called{false};
 	bool tp1_called{false};
 
-	tp0->start(std::chrono::milliseconds{100}, [=,&tp0_called](async::timer::ptr t)
+	tp0->start(std::chrono::milliseconds{100}, [=,&tp0_called](praktor::timer::ptr t)
 	{
 		tp0_called = true;
 		std::cout << "tp0 completed" << std::endl;
 	});
 
-	tp1->start(std::chrono::milliseconds{50}, [=,&tp1_called](async::timer::ptr t)
+	tp1->start(std::chrono::milliseconds{50}, [=,&tp1_called](praktor::timer::ptr t)
 	{
 		tp1_called = true;
 		tp0->close();
@@ -362,15 +362,15 @@ TEST_CASE("async::loop::timer [ smoke ] { close/cancel before expire }")
 }
 
 
-TEST_CASE("async::resolver [ smoke ] { basic }")
+TEST_CASE("praktor::resolver [ smoke ] { basic }")
 {
 	std::error_code err;
 
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	lp->resolve(
 			"google.com",
 			err,
-			[&](std::string const& hostname, std::deque<async::ip::address>&& addresses, std::error_code const& err) {
+			[&](std::string const& hostname, std::deque<praktor::ip::address>&& addresses, std::error_code const& err) {
 				std::cout << "resolver handler called for hostname " << hostname << std::endl;
 				std::cout << "status is " << err.message() << std::endl;
 				if (!err)
@@ -401,15 +401,15 @@ TEST_CASE("async::resolver [ smoke ] { basic }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::resolver [ smoke ] { not found failure }")
+TEST_CASE("praktor::resolver [ smoke ] { not found failure }")
 {
 	std::error_code err;
 
-	async::loop::ptr lp = async::loop::create();
+	praktor::loop::ptr lp = praktor::loop::create();
 	lp->resolve(
 			"no_such_host.com",
 			err,
-			[&](std::string const& hostname, std::deque<async::ip::address>&& addresses, std::error_code const& err) {
+			[&](std::string const& hostname, std::deque<praktor::ip::address>&& addresses, std::error_code const& err) {
 				std::cout << "resolver handler called for hostname " << hostname << std::endl;
 				std::cout << "status is " << err.message() << std::endl;
 				if (!err)
@@ -439,7 +439,7 @@ TEST_CASE("async::resolver [ smoke ] { not found failure }")
 	// lp->close();
 }
 
-TEST_CASE("async::resolver [ smoke ] { cancellation loop close }")
+TEST_CASE("praktor::resolver [ smoke ] { cancellation loop close }")
 {
 	{
 
@@ -448,11 +448,11 @@ TEST_CASE("async::resolver [ smoke ] { cancellation loop close }")
 
 		std::error_code err;
 
-		async::loop::ptr lp = async::loop::create();
+		praktor::loop::ptr lp = praktor::loop::create();
 		lp->resolve(
 				"gorblesnapper.org",
 				err,
-				[&](std::string const& hostname, std::deque<async::ip::address>&& addresses, std::error_code const& err) {
+				[&](std::string const& hostname, std::deque<praktor::ip::address>&& addresses, std::error_code const& err) {
 					auto                      current = std::chrono::system_clock::now();
 					std::chrono::microseconds elapsed
 							= std::chrono::duration_cast<std::chrono::microseconds>(current - start);
@@ -469,9 +469,9 @@ TEST_CASE("async::resolver [ smoke ] { cancellation loop close }")
 					std::cout.flush();
 				});
 
-		async::timer::ptr tp = lp->create_timer(
+		praktor::timer::ptr tp = lp->create_timer(
 				err,
-				[&](async::timer::ptr timer_ptr)    // mutable
+				[&](praktor::timer::ptr timer_ptr)    // mutable
 				{
 					auto                      current = std::chrono::system_clock::now();
 					std::chrono::microseconds elapsed

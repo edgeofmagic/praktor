@@ -22,18 +22,18 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_EVENT_FLOW_H
-#define ASYNC_EVENT_FLOW_H
+#ifndef PRAKTOR_EVENT_FLOW_H
+#define PRAKTOR_EVENT_FLOW_H
 
 #include <cstdint>
 #include <functional>
-#include <async/error.h>
+#include <praktor/error.h>
 #include <util/traits.h>
 #include <unordered_map>
 #include <unordered_set>
 
 
-namespace async
+namespace praktor
 {
 namespace event_flow
 {
@@ -907,6 +907,6 @@ private:
 };
 
 }    // namespace event_flow
-}    // namespace async
+}    // namespace praktor
 
-#endif    // ASYNC_EVENT_FLOW_H
+#endif    // PRAKTOR_EVENT_FLOW_H

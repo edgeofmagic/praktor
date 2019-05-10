@@ -22,18 +22,18 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_ADDRESS_H
-#define ASYNC_ADDRESS_H
+#ifndef PRAKTOR_ADDRESS_H
+#define PRAKTOR_ADDRESS_H
 
 #include <deque>
 #include <functional>
 #include <iostream>
-#include <async/error.h>
+#include <praktor/error.h>
 #include <sstream>
 #include <vector>
 
 
-namespace async
+namespace praktor
 {
 namespace ip
 {
@@ -419,15 +419,15 @@ operator<<(std::ostream& os, const enum ip::address::family fam)
 }
 
 }    // namespace ip
-}    // namespace async
+}    // namespace praktor
 
 namespace std
 {
 
 template<>
-struct hash<async::ip::address>
+struct hash<praktor::ip::address>
 {
-	typedef async::ip::address argument_type;
+	typedef praktor::ip::address argument_type;
 	typedef std::size_t                   result_type;
 
 	result_type
@@ -452,4 +452,4 @@ struct hash<async::ip::address>
 
 }    // namespace std
 
-#endif    // ASYNC_ADDRESS_H
+#endif    // PRAKTOR_ADDRESS_H

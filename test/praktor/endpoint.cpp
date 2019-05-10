@@ -24,12 +24,12 @@
 
 #include <doctest.h>
 #include <iostream>
-#include <async/endpoint.h>
+#include <praktor/endpoint.h>
 
-using namespace async;
+using namespace praktor;
 using namespace ip;
 
-TEST_CASE("async::ip::endpoint [ smoke ] { basic }")
+TEST_CASE("praktor::ip::endpoint [ smoke ] { basic }")
 {
 	std::error_code err;
 	endpoint        ep{address{"192.0.1.2", err}, 80};

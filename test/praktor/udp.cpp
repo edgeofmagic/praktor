@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include <async/loop.h>
+#include <praktor/loop.h>
 #include <doctest.h>
 #include <iostream>
 #include <util/buffer.h>
@@ -30,7 +30,7 @@
 #define END_LOOP(loop_ptr, delay_ms)                                                                                   \
 	{                                                                                                                  \
 		std::error_code _err;                                                                                          \
-		auto            loop_exit_timer = loop_ptr->create_timer(_err, [](async::timer::ptr tp) {                      \
+		auto            loop_exit_timer = loop_ptr->create_timer(_err, [](praktor::timer::ptr tp) {                      \
             std::error_code err;                                                                            \
             tp->loop()->stop(err);                                                                          \
             CHECK(!err);                                                                                    \
@@ -44,7 +44,7 @@
 #define DELAYED_ACTION_BEGIN(_loop_ptr)                                                                                \
 	{                                                                                                                  \
 		std::error_code _err;                                                                                          \
-	auto _action_timer = _loop_ptr->create_timer(_err, [&](async::timer::ptr tp)
+	auto _action_timer = _loop_ptr->create_timer(_err, [&](praktor::timer::ptr tp)
 
 #define DELAYED_ACTION_END(_delay_ms)                                                                                  \
 	);                                                                                                                 \
@@ -53,9 +53,9 @@
 	CHECK(!_err);                                                                                                      \
 	}
 
-using namespace async;
+using namespace praktor;
 
-TEST_CASE("async::udp [ smoke ] { basic functionality }")
+TEST_CASE("praktor::udp [ smoke ] { basic functionality }")
 {
 	bool acceptor_handler_did_execute{false};
 	bool send_timer_did_execute{false};
@@ -65,21 +65,21 @@ TEST_CASE("async::udp [ smoke ] { basic functionality }")
 
 	END_LOOP(lp, 2000);
 
-	auto recvr = lp->create_transceiver(async::options{async::ip::endpoint{async::ip::address::v4_any(), 7002}}, err);
+	auto recvr = lp->create_transceiver(praktor::options{praktor::ip::endpoint{praktor::ip::address::v4_any(), 7002}}, err);
 	CHECK(!err);
 
 	recvr->start_receive(
 			err,
-			[&](async::transceiver::ptr    transp,
+			[&](praktor::transceiver::ptr    transp,
 				util::const_buffer&&       buf,
-				async::ip::endpoint const& ep,
+				praktor::ip::endpoint const& ep,
 				std::error_code const&     err) {
 				std::cout << "in receiver handler, buffer: " << buf.to_string() << std::endl;
 				std::cout << "received from " << ep.to_string() << std::endl;
 			});
 
-	async::transceiver::ptr trans
-			= lp->create_transceiver(async::options{async::ip::endpoint{async::ip::address::v4_any(), 0}}, err);
+	praktor::transceiver::ptr trans
+			= lp->create_transceiver(praktor::options{praktor::ip::endpoint{praktor::ip::address::v4_any(), 0}}, err);
 	CHECK(!err);
 
 	util::mutable_buffer msg("hello there");
@@ -87,7 +87,7 @@ TEST_CASE("async::udp [ smoke ] { basic functionality }")
 
 	DELAYED_ACTION_BEGIN(lp)
 	{
-		trans->emit(std::move(msg), async::ip::endpoint{async::ip::address::v4_loopback(), 7002}, err);
+		trans->emit(std::move(msg), praktor::ip::endpoint{praktor::ip::address::v4_loopback(), 7002}, err);
 		CHECK(!err);
 		std::cout << "sending buffer on UDP socket" << std::endl;
 		send_timer_did_execute = true;
@@ -103,7 +103,7 @@ TEST_CASE("async::udp [ smoke ] { basic functionality }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::udp [ smoke ] { error on redundant receive }")
+TEST_CASE("praktor::udp [ smoke ] { error on redundant receive }")
 {
 	bool first_receive_handler_did_execute{false};
 	bool second_receive_handler_did_execute{false};
@@ -115,11 +115,11 @@ TEST_CASE("async::udp [ smoke ] { error on redundant receive }")
 	END_LOOP(lp, 2000);
 
 	auto recvr = lp->create_transceiver(
-			async::options{async::ip::endpoint{async::ip::address::v4_any(), 7002}},
+			praktor::options{praktor::ip::endpoint{praktor::ip::address::v4_any(), 7002}},
 			err,
-			[&](async::transceiver::ptr    transp,
+			[&](praktor::transceiver::ptr    transp,
 				util::const_buffer&&       buf,
-				async::ip::endpoint const& ep,
+				praktor::ip::endpoint const& ep,
 				std::error_code const&     err) {
 				first_receive_handler_did_execute = true;
 				CHECK(buf.to_string() == "hello there");
@@ -130,15 +130,15 @@ TEST_CASE("async::udp [ smoke ] { error on redundant receive }")
 
 	recvr->start_receive(
 			err,
-			[&](async::transceiver::ptr    transp,
+			[&](praktor::transceiver::ptr    transp,
 				util::const_buffer&&       buf,
-				async::ip::endpoint const& ep,
+				praktor::ip::endpoint const& ep,
 				std::error_code const&     err) { second_receive_handler_did_execute = true; });
 	CHECK(err);
 	CHECK(err == std::errc::connection_already_in_progress);
 
-	async::transceiver::ptr trans
-			= lp->create_transceiver(async::options{async::ip::endpoint{async::ip::address::v4_any(), 0}}, err);
+	praktor::transceiver::ptr trans
+			= lp->create_transceiver(praktor::options{praktor::ip::endpoint{praktor::ip::address::v4_any(), 0}}, err);
 	CHECK(!err);
 
 	util::mutable_buffer msg("hello there");
@@ -146,7 +146,7 @@ TEST_CASE("async::udp [ smoke ] { error on redundant receive }")
 
 	DELAYED_ACTION_BEGIN(lp)
 	{
-		trans->emit(std::move(msg), async::ip::endpoint{async::ip::address::v4_loopback(), 7002}, err);
+		trans->emit(std::move(msg), praktor::ip::endpoint{praktor::ip::address::v4_loopback(), 7002}, err);
 		CHECK(!err);
 		send_timer_did_execute = true;
 	}
@@ -163,14 +163,14 @@ TEST_CASE("async::udp [ smoke ] { error on redundant receive }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::udp [ smoke ] { max datagram size }")
+TEST_CASE("praktor::udp [ smoke ] { max datagram size }")
 {
 	bool receive_handler_did_execute{false};
 	bool send_timer_did_execute{false};
 
-	util::mutable_buffer big{async::transceiver::payload_size_limit};
+	util::mutable_buffer big{praktor::transceiver::payload_size_limit};
 	big.fill(static_cast<util::byte_type>('Z'));
-	big.size(async::transceiver::payload_size_limit);
+	big.size(praktor::transceiver::payload_size_limit);
 
 	std::error_code err;
 	auto            lp = loop::create();
@@ -178,19 +178,19 @@ TEST_CASE("async::udp [ smoke ] { max datagram size }")
 	END_LOOP(lp, 2000);
 
 	auto recvr = lp->create_transceiver(
-			async::options{async::ip::endpoint{async::ip::address::v4_any(), 7002}},
+			praktor::options{praktor::ip::endpoint{praktor::ip::address::v4_any(), 7002}},
 			err,
-			[&](async::transceiver::ptr    transp,
+			[&](praktor::transceiver::ptr    transp,
 				util::const_buffer&&       buf,
-				async::ip::endpoint const& ep,
+				praktor::ip::endpoint const& ep,
 				std::error_code const&     err) {
 				CHECK(!err);
 				receive_handler_did_execute = true;
-				CHECK(buf.size() == async::transceiver::payload_size_limit);
-				if (buf.size() == async::transceiver::payload_size_limit)
+				CHECK(buf.size() == praktor::transceiver::payload_size_limit);
+				if (buf.size() == praktor::transceiver::payload_size_limit)
 				{
 					bool same = true;
-					for (std::size_t i = 0; i < async::transceiver::payload_size_limit; ++i)
+					for (std::size_t i = 0; i < praktor::transceiver::payload_size_limit; ++i)
 					{
 						if (buf.data()[i] != static_cast<util::byte_type>('Z'))
 						{
@@ -205,19 +205,19 @@ TEST_CASE("async::udp [ smoke ] { max datagram size }")
 			});
 	CHECK(!err);
 
-	async::transceiver::ptr trans
-			= lp->create_transceiver(async::options{async::ip::endpoint{async::ip::address::v4_any(), 0}}, err);
+	praktor::transceiver::ptr trans
+			= lp->create_transceiver(praktor::options{praktor::ip::endpoint{praktor::ip::address::v4_any(), 0}}, err);
 	CHECK(!err);
 
 	DELAYED_ACTION_BEGIN(lp)
 	{
 		trans->emit(
 				std::move(big),
-				async::ip::endpoint{async::ip::address::v4_loopback(), 7002},
+				praktor::ip::endpoint{praktor::ip::address::v4_loopback(), 7002},
 				err,
 				[&](transceiver::ptr const&    trans,
 					util::mutable_buffer&&     buf,
-					async::ip::endpoint const& ep,
+					praktor::ip::endpoint const& ep,
 					std::error_code const&     err) {
 					CHECK(!err);
 					std::cout << "error in emit handler, " << err.message() << std::endl;

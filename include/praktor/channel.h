@@ -22,21 +22,21 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_CHANNEL_H
-#define ASYNC_CHANNEL_H
+#ifndef PRAKTOR_CHANNEL_H
+#define PRAKTOR_CHANNEL_H
 
 #include <chrono>
 #include <deque>
 #include <functional>
-#include <async/endpoint.h>
-#include <async/options.h>
+#include <praktor/endpoint.h>
+#include <praktor/options.h>
 #include <util/buffer.h>
 #include <util/shared_ptr.h>
 #include <memory>
 #include <system_error>
 
 
-namespace async
+namespace praktor
 {
 
 class loop;
@@ -237,7 +237,7 @@ public:
 	}
 
 	void
-	bind(async::options const& opts)
+	bind(praktor::options const& opts)
 	{
 		std::error_code err;
 		really_bind(opts, err);
@@ -248,7 +248,7 @@ public:
 	}
 
 	void
-	bind(async::options const& opts, std::error_code& err)
+	bind(praktor::options const& opts, std::error_code& err)
 	{
 		really_bind(opts, err);
 	}
@@ -308,12 +308,12 @@ protected:
 			= 0;
 	
 	virtual void
-	really_bind(async::options const& opts, std::error_code& err) = 0;
+	really_bind(praktor::options const& opts, std::error_code& err) = 0;
 
 	virtual void
 	really_listen(std::error_code& err, connection_handler&& handler) = 0;
 };
 
-}    // namespace async
+}    // namespace praktor
 
-#endif    // ASYNC_CHANNEL_H
+#endif    // PRAKTOR_CHANNEL_H

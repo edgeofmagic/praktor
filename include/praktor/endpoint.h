@@ -22,18 +22,18 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_ENDPOINT_H
-#define ASYNC_ENDPOINT_H
+#ifndef PRAKTOR_ENDPOINT_H
+#define PRAKTOR_ENDPOINT_H
 
-#include <async/address.h>
-#include <async/error.h>
+#include <praktor/address.h>
+#include <praktor/error.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <sstream>
 #include <sys/socket.h>
 
 
-namespace async
+namespace praktor
 {
 namespace ip
 {
@@ -259,21 +259,21 @@ operator<<(std::ostream& os, const ip::endpoint& endpoint)
 }
 
 }    // namespace ip
-}    // namespace async
+}    // namespace praktor
 
 namespace std
 {
 
 template<>
-struct hash<async::ip::endpoint>
+struct hash<praktor::ip::endpoint>
 {
-	typedef async::ip::endpoint argument_type;
+	typedef praktor::ip::endpoint argument_type;
 	typedef std::size_t                    result_type;
 
 	result_type
 	operator()(const argument_type& v) const
 	{
-		result_type res = std::hash<async::ip::address>()(v.addr());
+		result_type res = std::hash<praktor::ip::address>()(v.addr());
 		res             = (res << 1) + res + std::hash<std::uint16_t>{}(v.port());
 		return res;
 	}
@@ -281,4 +281,4 @@ struct hash<async::ip::endpoint>
 
 }    // namespace std
 
-#endif    // ASYNC_ENDPOINT_H
+#endif    // PRAKTOR_ENDPOINT_H

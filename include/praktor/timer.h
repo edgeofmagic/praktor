@@ -22,31 +22,71 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_TCP_H
-#define ASYNC_TCP_H
+#ifndef PRAKTOR_TIMER_H
+#define PRAKTOR_TIMER_H
 
-#include <list>
-#include <async/channel.h>
-#include <async/loop.h>
-#include <async/options.h>
+#include <chrono>
+#include <functional>
 #include <util/shared_ptr.h>
+#include <memory>
+#include <system_error>
 
 
-namespace async
+namespace praktor
 {
 
-class tcp_channel : public channel
-{
-public:
-	using ptr = util::shared_ptr<tcp_channel>;
-};
+class loop;
 
-class tcp_acceptor : public acceptor
+class timer
 {
 public:
-	using ptr = util::shared_ptr<tcp_acceptor>;
+	using ptr          = util::shared_ptr<timer>;
+	using handler      = std::function<void(timer::ptr)>;
+	using void_handler = std::function<void()>;
+
+	virtual ~timer() {}
+
+	virtual void
+	start(std::chrono::milliseconds timeout)
+			= 0;
+
+	virtual void
+	start(std::chrono::milliseconds timeout, std::error_code& err)
+			= 0;
+
+	virtual void
+	start(std::chrono::milliseconds timeout, handler h)
+			= 0;
+
+	virtual void
+	start(std::chrono::milliseconds timeout, std::error_code&, handler h)
+			= 0;
+
+	virtual void
+	start(std::chrono::milliseconds timeout, void_handler h)
+			= 0;
+
+	virtual void
+	start(std::chrono::milliseconds timeout, std::error_code& err, void_handler h)
+			= 0;
+
+	virtual void
+	stop(std::error_code& err)
+			= 0;
+
+	virtual void
+	stop() = 0;
+
+	virtual void
+	close() = 0;
+
+	virtual std::shared_ptr<loop>
+	loop() = 0;
+
+	virtual bool
+	is_pending() const = 0;
 };
 
-}    // namespace async
+}    // namespace praktor
 
-#endif    // ASYNC_TCP_H
+#endif    // PRAKTOR_TIMER_H

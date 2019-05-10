@@ -5,11 +5,11 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "(lldb) Launch async UDP",
+			"name": "(lldb) Launch praktor UDP",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/async_test",
-			"args": ["--test-case=*async::udp*"],
+			"program": "${workspaceFolder}/build/praktor_test",
+			"args": ["--test-case=*praktor::udp*"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/build",
 			"environment": [],
@@ -17,11 +17,11 @@
 			"MIMode": "lldb"
 		},
 		{
-			"name": "(lldb) Launch async loop",
+			"name": "(lldb) Launch praktor loop",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/async_test",
-			"args": ["--test-case=*async::loop*"],
+			"program": "${workspaceFolder}/build/praktor_test",
+			"args": ["--test-case=*praktor::loop*"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/build",
 			"environment": [],
@@ -29,11 +29,11 @@
 			"MIMode": "lldb"
 		},
 		{
-			"name": "(lldb) Launch async event",
+			"name": "(lldb) Launch praktor event",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/async_test",
-			"args": ["--test-case=*async::event*"],
+			"program": "${workspaceFolder}/build/praktor_test",
+			"args": ["--test-case=*praktor::event*"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/build",
 			"environment": [],
@@ -41,11 +41,11 @@
 			"MIMode": "lldb"
 		},
 		{
-			"name": "(lldb) Launch async event_flow",
+			"name": "(lldb) Launch praktor event_flow",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/async_test",
-			"args": ["--test-case=*async::event_flow*"],
+			"program": "${workspaceFolder}/build/praktor_test",
+			"args": ["--test-case=*praktor::event_flow*"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/build",
 			"environment": [],
@@ -53,11 +53,11 @@
 			"MIMode": "lldb"
 		},
 		{
-			"name": "(lldb) Launch async TCP",
+			"name": "(lldb) Launch praktor TCP",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/async_test",
-			"args": ["--test-case=*async::tcp*"],
+			"program": "${workspaceFolder}/build/praktor_test",
+			"args": ["--test-case=*praktor::tcp*"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/build",
 			"environment": [],
@@ -68,7 +68,7 @@
 			"name": "(lldb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/async_test",
+			"program": "${workspaceFolder}/build/praktor_test",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/build",

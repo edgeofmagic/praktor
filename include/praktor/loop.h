@@ -22,22 +22,22 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_LOOP_H
-#define ASYNC_LOOP_H
+#ifndef PRAKTOR_LOOP_H
+#define PRAKTOR_LOOP_H
 
 #include <chrono>
 #include <functional>
-#include <async/channel.h>
-#include <async/endpoint.h>
-#include <async/options.h>
-#include <async/timer.h>
-#include <async/transceiver.h>
+#include <praktor/channel.h>
+#include <praktor/endpoint.h>
+#include <praktor/options.h>
+#include <praktor/timer.h>
+#include <praktor/transceiver.h>
 #include <util/promise.h>
 #include <memory>
 #include <system_error>
 
 
-namespace async
+namespace praktor
 {
 
 class loop
@@ -453,15 +453,15 @@ protected:
 			= 0;
 };
 
-}    // namespace async
+}    // namespace praktor
 
 template<>
-class util::promise_timer<async::loop::ptr>
+class util::promise_timer<praktor::loop::ptr>
 {
 public:
-	promise_timer(std::chrono::milliseconds t, async::loop::ptr const& lp) : m_timeout{t}, m_loop{lp} {}
+	promise_timer(std::chrono::milliseconds t, praktor::loop::ptr const& lp) : m_timeout{t}, m_loop{lp} {}
 
-	promise_timer(std::chrono::milliseconds t) : m_timeout{t}, m_loop{async::loop::get_default()} {}
+	promise_timer(std::chrono::milliseconds t) : m_timeout{t}, m_loop{praktor::loop::get_default()} {}
 
 	template<class T>
 	void
@@ -487,8 +487,8 @@ public:
 
 private:
 	std::chrono::milliseconds   m_timeout;
-	async::loop::ptr m_loop;
+	praktor::loop::ptr m_loop;
 };
 
 
-#endif    // ASYNC_LOOP_H
+#endif    // PRAKTOR_LOOP_H

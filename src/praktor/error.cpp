@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include <async/error.h>
+#include <praktor/error.h>
 
 
 class address_info_category_impl : public std::error_category
@@ -102,7 +102,7 @@ address_info::make_error_code( address_info::errc e )
 }
 
 
-class async_category_impl : public std::error_category
+class praktor_category_impl : public std::error_category
 {
 public:
 	virtual const char* 
@@ -114,59 +114,59 @@ public:
 };
 
 const char* 
-async_category_impl::name() const noexcept
+praktor_category_impl::name() const noexcept
 {
-    return "async";
+    return "praktor";
 }
 
 std::string 
-async_category_impl::message(int ev ) const noexcept
+praktor_category_impl::message(int ev ) const noexcept
 {
-    switch ( static_cast< async::errc > (ev ) )
+    switch ( static_cast< praktor::errc > (ev ) )
     {
-		case async::errc::ok:
+		case praktor::errc::ok:
 			return "success";
-		case async::errc::invalid_unicode_character:			// UV__ECHARSET
+		case praktor::errc::invalid_unicode_character:			// UV__ECHARSET
 			return "invalid unicode character";
-		case async::errc::host_is_down:							// UV__EHOSTDOWN
+		case praktor::errc::host_is_down:							// UV__EHOSTDOWN
 			return "host is down";
-		case async::errc::no_network_connection:				// UV__ENONET
+		case praktor::errc::no_network_connection:				// UV__ENONET
 			return "machine not connected to network";
-		case async::errc::end_of_file:							// UV__EOF
+		case praktor::errc::end_of_file:							// UV__EOF
 			return "end of file or stream";
-		case async::errc::remote_io_error:						// UV__EREMOTEIO
+		case praktor::errc::remote_io_error:						// UV__EREMOTEIO
 			return "remote I/O error";
-		case async::errc::transport_endpoint_shutdown:			// UV__ESHUTDOWN
+		case praktor::errc::transport_endpoint_shutdown:			// UV__ESHUTDOWN
 			return "cannot send after transport endpoint shutdown";
-		case async::errc::unknown_error:						// UV__UNKNOWN
+		case praktor::errc::unknown_error:						// UV__UNKNOWN
 			return "unknown system error";
-		case async::errc::ill_formed_address:
+		case praktor::errc::ill_formed_address:
 			return "ill-formed address";
-		case async::errc::loop_closed:
+		case praktor::errc::loop_closed:
 			return "loop closed";
-		case async::errc::timer_closed:
+		case praktor::errc::timer_closed:
 			return "timer closed";
 		default:
-			return "unknown async error";
+			return "unknown praktor error";
     }
 }
 
 std::error_category const&
-async::error_category() noexcept
+praktor::error_category() noexcept
 {
-    static async_category_impl instance;
+    static praktor_category_impl instance;
     return instance;
 }
 
 std::error_condition 
-async::make_error_condition( async::errc e )
+praktor::make_error_condition( praktor::errc e )
 {
-    return std::error_condition( static_cast< int >( e ), async::error_category() );
+    return std::error_condition( static_cast< int >( e ), praktor::error_category() );
 }
 
 std::error_code 
-async::make_error_code( async::errc e )
+praktor::make_error_code( praktor::errc e )
 {
-    return std::error_code( static_cast< int >( e ), async::error_category() );
+    return std::error_code( static_cast< int >( e ), praktor::error_category() );
 }
 

@@ -7,7 +7,7 @@
         {
             "label": "Test All",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
             ],
             "group": "test",
@@ -28,7 +28,7 @@
         {
             "label": "Test detailed",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
 				"--test-case=*close/cancel before expire*"
             ],
@@ -48,11 +48,11 @@
             "problemMatcher": []
         },
         {
-            "label": "Test Async Loop",
+            "label": "Test Praktor Loop",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
-				"--test-case=*async::loop*"
+				"--test-case=*praktor::loop*"
             ],
             "group": "test",
             "options": 
@@ -72,9 +72,9 @@
         {
             "label": "Test Events",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
-				"--test-case=*async::event*"
+				"--test-case=*praktor::event*"
             ],
             "group": "test",
             "options": 
@@ -94,9 +94,9 @@
         {
             "label": "Test Event Flow",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
-				"--test-case=*async::event_flow*"
+				"--test-case=*praktor::event_flow*"
             ],
             "group": "test",
             "options": 
@@ -116,9 +116,9 @@
 		{
             "label": "Test UDP",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
-				"--test-case=*async::udp*"
+				"--test-case=*praktor::udp*"
             ],
             "group": "test",
             "options": 
@@ -138,9 +138,9 @@
 		{
             "label": "Test TCP stream",
             "type": "process",
-            "command": "./async_test",
+            "command": "./praktor_test",
             "args": [
-				"--test-case=*async::tcp_stream*"
+				"--test-case=*praktor::tcp_stream*"
             ],
             "group": "test",
             "options": 
@@ -162,7 +162,7 @@
             "type": "process",
             "command": "make",
             "args": [
-				"async_doc"
+				"praktor_doc"
             ],
             "group": "build",
             "options": 

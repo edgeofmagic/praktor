@@ -22,24 +22,24 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_TRANSCEIVER_H
-#define ASYNC_TRANSCEIVER_H
+#ifndef PRAKTOR_TRANSCEIVER_H
+#define PRAKTOR_TRANSCEIVER_H
 
 #include <chrono>
 #include <deque>
 #include <functional>
-#include <async/endpoint.h>
+#include <praktor/endpoint.h>
 #include <util/buffer.h>
 #include <util/shared_ptr.h>
 #include <memory>
 #include <system_error>
 
-#ifndef ASYNC_TRANSCEIVER_MAX_MSG_SIZE
-#define ASYNC_TRANSCEIVER_MAX_MSG_SIZE (9216)
+#ifndef PRAKTOR_TRANSCEIVER_MAX_MSG_SIZE
+#define PRAKTOR_TRANSCEIVER_MAX_MSG_SIZE (9216)
 #endif
 
 
-namespace async
+namespace praktor
 {
 
 class loop;
@@ -66,7 +66,7 @@ public:
 
 	using close_handler = std::function<void(transceiver::ptr const& chan)>;
 
-	static constexpr std::size_t payload_size_limit = ASYNC_TRANSCEIVER_MAX_MSG_SIZE;
+	static constexpr std::size_t payload_size_limit = PRAKTOR_TRANSCEIVER_MAX_MSG_SIZE;
 
 	void
 	start_receive(std::error_code& err, transceiver::receive_handler handler)
@@ -202,6 +202,6 @@ protected:
 			= 0;
 };
 
-}    // namespace async
+}    // namespace praktor
 
-#endif    // ASYNC_TRANSCEIVER_H
+#endif    // PRAKTOR_TRANSCEIVER_H

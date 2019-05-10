@@ -26,11 +26,11 @@
 #include <boost/endian/conversion.hpp>
 #include <cctype>
 #include <cstring>
-#include <async/address.h>
+#include <praktor/address.h>
 #include <sstream>
 #include <vector>
 
-using namespace async;
+using namespace praktor;
 
 void
 ip::address::to_v4(std::ostream& os) const
@@ -301,7 +301,7 @@ private:
 		}
 		catch (std::exception const& ex)
 		{
-			err = make_error_code(async::errc::ill_formed_address);
+			err = make_error_code(praktor::errc::ill_formed_address);
 		}
 		return boost::endian::native_to_big(static_cast<std::uint16_t>(result));
 	}
@@ -317,12 +317,12 @@ private:
 		}
 		catch (std::exception const& ex)
 		{
-			err = make_error_code(async::errc::ill_formed_address);
+			err = make_error_code(praktor::errc::ill_formed_address);
 			goto exit;
 		}
 		if (result > 255)
 		{
-			err = make_error_code(async::errc::ill_formed_address);
+			err = make_error_code(praktor::errc::ill_formed_address);
 		}
 	exit:
 		return static_cast<std::uint16_t>(result);
@@ -547,7 +547,7 @@ public:
 		{
 			if (v4_bytes.size() != 4)
 			{
-				err = make_error_code(async::errc::ill_formed_address);
+				err = make_error_code(praktor::errc::ill_formed_address);
 				goto error_exit;
 			}
 
@@ -612,7 +612,7 @@ public:
 		return;
 
 	error_exit:
-		err = make_error_code(async::errc::ill_formed_address);
+		err = make_error_code(praktor::errc::ill_formed_address);
 		return;
 	}
 };

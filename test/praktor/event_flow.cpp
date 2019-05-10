@@ -24,9 +24,9 @@
 
 #include <doctest.h>
 #include <iostream>
-#include <async/event_flow.h>
+#include <praktor/event_flow.h>
 
-using namespace async;
+using namespace praktor;
 using namespace event_flow;
 
 #if 1
@@ -431,7 +431,7 @@ event_flow_test::combo_a::combo_a(combo_b& b)
 
 using namespace event_flow_test;
 
-TEST_CASE("async::event_flow [ smoke ] { functor }")
+TEST_CASE("praktor::event_flow [ smoke ] { functor }")
 {
 
 	functor_victim nicole;
@@ -450,7 +450,7 @@ TEST_CASE("async::event_flow [ smoke ] { functor }")
 	CHECK(nicole.message() == "Die, bitch!");
 }
 
-TEST_CASE("async::event_flow [ smoke ] { naked emitter }")
+TEST_CASE("praktor::event_flow [ smoke ] { naked emitter }")
 {
 
 	functor_victim nicole;
@@ -468,7 +468,7 @@ TEST_CASE("async::event_flow [ smoke ] { naked emitter }")
 	CHECK(nicole.message() == "Die, bitch!");
 }
 
-TEST_CASE("async::event_flow::sink [ smoke ] { lambda move }")
+TEST_CASE("praktor::event_flow::sink [ smoke ] { lambda move }")
 {
 	lambda_victim nicole;
 
@@ -484,7 +484,7 @@ TEST_CASE("async::event_flow::sink [ smoke ] { lambda move }")
 	CHECK(nicole.message() == "Die, bitch!");
 }
 
-TEST_CASE("async::event_flow::connector [ smoke ] { 1 }")
+TEST_CASE("praktor::event_flow::connector [ smoke ] { 1 }")
 {
 	lambda_victim  nicole;
 	functor_victim jfk;
@@ -508,7 +508,7 @@ TEST_CASE("async::event_flow::connector [ smoke ] { 1 }")
 	CHECK(jfk.message() == "Bang, bang bang!");
 }
 
-TEST_CASE("async::event_flow::connector [ smoke ] { 2 }")
+TEST_CASE("praktor::event_flow::connector [ smoke ] { 2 }")
 {
 	victim nicole;
 
@@ -524,7 +524,7 @@ TEST_CASE("async::event_flow::connector [ smoke ] { 2 }")
 }
 
 
-TEST_CASE("async::event_flow::connectable [ smoke ] { simple }")
+TEST_CASE("praktor::event_flow::connectable [ smoke ] { simple }")
 {
 	murder top;
 	redrum bottom;
@@ -544,7 +544,7 @@ TEST_CASE("async::event_flow::connectable [ smoke ] { simple }")
 	CHECK(bottom.message() == "Die, bitch!");
 }
 
-TEST_CASE("async::event_flow::connectable [ smoke ] { complex }")
+TEST_CASE("praktor::event_flow::connectable [ smoke ] { complex }")
 {
 	foo f;
 	oof o;
@@ -695,7 +695,7 @@ public:
 
 }    // namespace event_flow_test
 
-TEST_CASE("async::event_flow::connectable [ smoke ] { double wrap }")
+TEST_CASE("praktor::event_flow::connectable [ smoke ] { double wrap }")
 {
 	combo_b b;
 	combo_a a(b);
@@ -719,7 +719,7 @@ TEST_CASE("async::event_flow::connectable [ smoke ] { double wrap }")
 	CHECK(a.beep_i == 27);
 }
 
-TEST_CASE("async::event_flow::surface [ smoke ] { basic }")
+TEST_CASE("praktor::event_flow::surface [ smoke ] { basic }")
 {
 	top    t;
 	bottom b;
@@ -863,7 +863,7 @@ private:
 
 }    // namespace stack_test
 
-TEST_CASE("async::event_flow::surface [ smoke ] { layer stacking null constructed tuple }")
+TEST_CASE("praktor::event_flow::surface [ smoke ] { layer stacking null constructed tuple }")
 {
 	assembly<stack_test::anchor, stack_test::repeater, stack_test::driver> stck;
 
@@ -880,7 +880,7 @@ TEST_CASE("async::event_flow::surface [ smoke ] { layer stacking null constructe
 }
 
 
-TEST_CASE("async::event_flow::surface [ smoke ] { layer stacking move constructed tuple }")
+TEST_CASE("praktor::event_flow::surface [ smoke ] { layer stacking move constructed tuple }")
 {
 	assembly<stack_test::anchor, stack_test::repeater, stack_test::driver> stck{
 			stack_test::anchor{}, stack_test::repeater{}, stack_test::driver{}};
@@ -897,7 +897,7 @@ TEST_CASE("async::event_flow::surface [ smoke ] { layer stacking move constructe
 	CHECK(handler_called);
 }
 
-TEST_CASE("async::event_flow::surface [ smoke ] { layer stacking manual }")
+TEST_CASE("praktor::event_flow::surface [ smoke ] { layer stacking manual }")
 {
 	std::tuple<stack_test::anchor, stack_test::repeater, stack_test::driver> stck;
 	std::get<0>(stck).get_top().stack(std::get<1>(stck).get_bottom());

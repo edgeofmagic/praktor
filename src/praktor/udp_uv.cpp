@@ -64,7 +64,7 @@ udp_send_bufs_req_uv::on_send(uv_udp_send_t* req, int status)
 	delete target;
 }
 
-std::shared_ptr<async::loop>
+std::shared_ptr<praktor::loop>
 udp_transceiver_uv::loop()
 {
 	return reinterpret_cast<loop_data*>(reinterpret_cast<uv_handle_t*>(&m_udp_handle)->loop->data)->get_loop_ptr();
@@ -101,7 +101,7 @@ udp_transceiver_uv::on_receive(
 		transceiver_ptr->m_receive_handler(
 				transceiver_ptr,
 				util::const_buffer{},
-				async::ip::endpoint{*reinterpret_cast<const sockaddr_storage*>(addr)},
+				praktor::ip::endpoint{*reinterpret_cast<const sockaddr_storage*>(addr)},
 				map_uv_error(nread));
 	}
 	else if (nread == 0)
@@ -115,7 +115,7 @@ udp_transceiver_uv::on_receive(
 			transceiver_ptr->m_receive_handler(
 					transceiver_ptr,
 					util::const_buffer{},
-					async::ip::endpoint{*reinterpret_cast<const sockaddr_storage*>(addr)},
+					praktor::ip::endpoint{*reinterpret_cast<const sockaddr_storage*>(addr)},
 					std::error_code{});
 		}
 	}
@@ -126,7 +126,7 @@ udp_transceiver_uv::on_receive(
 				util::const_buffer{reinterpret_cast<util::byte_type*>(buf->base),
 								   static_cast<util::size_type>(nread),
 								   std::default_delete<util::byte_type[]>{}},
-				async::ip::endpoint{*reinterpret_cast<const sockaddr_storage*>(addr)},
+				praktor::ip::endpoint{*reinterpret_cast<const sockaddr_storage*>(addr)},
 				std::error_code{});
 	}
 }

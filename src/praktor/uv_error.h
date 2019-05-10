@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_UV_ERROR_H
-#define ASYNC_UV_ERROR_H
+#ifndef PRAKTOR_UV_ERROR_H
+#define PRAKTOR_UV_ERROR_H
 
-#include <async/error.h>
+#include <praktor/error.h>
 #include <uv.h>
 
 #define UV_ERROR_CHECK(_uv_err_, _err_var_, _label_)                                                                   \
@@ -180,7 +180,7 @@ map_uv_error(int uv_code)
 		}
 		case UV_ECHARSET:
 		{
-			static const std::error_code e = make_error_code(async::errc::invalid_unicode_character);
+			static const std::error_code e = make_error_code(praktor::errc::invalid_unicode_character);
 			return e;
 		}
 		case UV_ECONNABORTED:
@@ -220,7 +220,7 @@ map_uv_error(int uv_code)
 		}
 		case UV_EHOSTDOWN:
 		{
-			static const std::error_code e = make_error_code(async::errc::host_is_down);
+			static const std::error_code e = make_error_code(praktor::errc::host_is_down);
 			return e;
 		}
 		case UV_EHOSTUNREACH:
@@ -315,7 +315,7 @@ map_uv_error(int uv_code)
 		}
 		case UV_ENONET:
 		{
-			static const std::error_code e = make_error_code(async::errc::no_network_connection);
+			static const std::error_code e = make_error_code(praktor::errc::no_network_connection);
 			return e;
 		}
 		case UV_ENOPROTOOPT:
@@ -370,7 +370,7 @@ map_uv_error(int uv_code)
 		}
 		case UV_EOF:
 		{
-			static const std::error_code e = make_error_code(async::errc::end_of_file);
+			static const std::error_code e = make_error_code(praktor::errc::end_of_file);
 			return e;
 		}
 		case UV_EPERM:
@@ -405,7 +405,7 @@ map_uv_error(int uv_code)
 		}
 		case UV_EREMOTEIO:
 		{
-			static const std::error_code e = make_error_code(async::errc::remote_io_error);
+			static const std::error_code e = make_error_code(praktor::errc::remote_io_error);
 			return e;
 		}
 		case UV_EROFS:
@@ -415,7 +415,7 @@ map_uv_error(int uv_code)
 		}
 		case UV_ESHUTDOWN:
 		{
-			static const std::error_code e = make_error_code(async::errc::transport_endpoint_shutdown);
+			static const std::error_code e = make_error_code(praktor::errc::transport_endpoint_shutdown);
 			return e;
 		}
 		case UV_ESPIPE:
@@ -446,10 +446,10 @@ map_uv_error(int uv_code)
 		case UV_UNKNOWN:
 		default:
 		{
-			static const std::error_code e = make_error_code(async::errc::unknown_error);
+			static const std::error_code e = make_error_code(praktor::errc::unknown_error);
 			return e;
 		}
 	}
 }
 
-#endif    // ASYNC_UV_ERROR_H
+#endif    // PRAKTOR_UV_ERROR_H

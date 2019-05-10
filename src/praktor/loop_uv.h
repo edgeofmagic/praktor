@@ -22,23 +22,23 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_LOOP_UV_H
-#define ASYNC_LOOP_UV_H
+#ifndef PRAKTOR_LOOP_UV_H
+#define PRAKTOR_LOOP_UV_H
 
 #include "uv_error.h"
 #include <deque>
-#include <async/loop.h>
+#include <praktor/loop.h>
 #include <mutex>
 #include <uv.h>
 
-using async::ip::endpoint;
+using praktor::ip::endpoint;
 using util::mutable_buffer;
-using async::transceiver;
-using async::acceptor;
-using async::channel;
-using async::options;
-using async::timer;
-using async::loop;
+using praktor::transceiver;
+using praktor::acceptor;
+using praktor::channel;
+using praktor::options;
+using praktor::timer;
+using praktor::loop;
 
 class resolve_req_uv
 {
@@ -199,4 +199,4 @@ private:
 	bool                               m_is_default_loop;
 };
 
-#endif    // ASYNC_LOOP_UV_H
+#endif    // PRAKTOR_LOOP_UV_H

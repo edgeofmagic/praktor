@@ -24,19 +24,19 @@
 
 #include <doctest.h>
 #include <iostream>
-#include <async/address.h>
+#include <praktor/address.h>
 
-TEST_CASE("async::ip::address [ smoke ] { basic }")
+TEST_CASE("praktor::ip::address [ smoke ] { basic }")
 {
-	async::ip::address a;
+	praktor::ip::address a;
 	CHECK(a.is_v4_any());
 
-	a = async::ip::address{"::"};
+	a = praktor::ip::address{"::"};
 	CHECK(a.is_v6_any());
 
 	std::error_code err;
 
-	a = async::ip::address{"::FFFF:c0:0:2:1", err};
+	a = praktor::ip::address{"::FFFF:c0:0:2:1", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::ffff:c0:0:2:1");
 	CHECK(a.to_uint8(0) == 0);
@@ -56,27 +56,27 @@ TEST_CASE("async::ip::address [ smoke ] { basic }")
 	CHECK(a.to_uint8(14) == 0);
 	CHECK(a.to_uint8(15) == 1);
 
-	a = async::ip::address{"::FFFF:c000:201", err};
+	a = praktor::ip::address{"::FFFF:c000:201", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::ffff:192.0.2.1");
 
-	a = async::ip::address{"1:2:3:4:0:0:0:0", err};
+	a = praktor::ip::address{"1:2:3:4:0:0:0:0", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "1:2:3:4::");
 
-	a = async::ip::address{"1:2:3:4::", err};
+	a = praktor::ip::address{"1:2:3:4::", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "1:2:3:4::");
 
-	a = async::ip::address{"0:0:0:0:0:ffff:192.0.2.1", err};
+	a = praktor::ip::address{"0:0:0:0:0:ffff:192.0.2.1", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::ffff:192.0.2.1");
 
-	a = async::ip::address{"::ffff:192.0.2.1", err};
+	a = praktor::ip::address{"::ffff:192.0.2.1", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::ffff:192.0.2.1");
 
-	a = async::ip::address{"0:0:0:0:0:0:192.0.2.1", err};
+	a = praktor::ip::address{"0:0:0:0:0:0:192.0.2.1", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::192.0.2.1");
 	CHECK(a.to_uint8(0) == 0);
@@ -96,85 +96,85 @@ TEST_CASE("async::ip::address [ smoke ] { basic }")
 	CHECK(a.to_uint8(14) == 2);
 	CHECK(a.to_uint8(15) == 1);
 
-	a = async::ip::address{"::192.0.2.1", err};
+	a = praktor::ip::address{"::192.0.2.1", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::192.0.2.1");
 
-	a = async::ip::address{"1:0:0:4:5:0:0:8", err};
+	a = praktor::ip::address{"1:0:0:4:5:0:0:8", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "1::4:5:0:0:8");
 
-	a = async::ip::address{"1:0:0:4:0:0:0:8", err};
+	a = praktor::ip::address{"1:0:0:4:0:0:0:8", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "1:0:0:4::8");
 
-	a = async::ip::address{"::3:0:0:0:7:8", err};
+	a = praktor::ip::address{"::3:0:0:0:7:8", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "0:0:3::7:8");
 }
 
-TEST_CASE("async::ip::address [ smoke ] { v6_parse_errors }")
+TEST_CASE("praktor::ip::address [ smoke ] { v6_parse_errors }")
 {
-	async::ip::address a;
+	praktor::ip::address a;
 	CHECK(a.is_v4_any());
 
 	std::error_code err;
 
-	a = async::ip::address("::1:2:3::ff", err);
+	a = praktor::ip::address("::1:2:3::ff", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("::1:2:3:4:5:6:7", err);
+	a = praktor::ip::address("::1:2:3:4:5:6:7", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("1:2:3:4:5:6:7", err);
+	a = praktor::ip::address("1:2:3:4:5:6:7", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("1:2:3:4:5:6:7:8:9", err);
+	a = praktor::ip::address("1:2:3:4:5:6:7:8:9", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("1:2:3:4:5:6:7:8::", err);
+	a = praktor::ip::address("1:2:3:4:5:6:7:8::", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("1:2:3:4:5:6:7::", err);
+	a = praktor::ip::address("1:2:3:4:5:6:7::", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("1:2:3:4::5:6:7", err);
+	a = praktor::ip::address("1:2:3:4::5:6:7", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("1:2:3::fg", err);
+	a = praktor::ip::address("1:2:3::fg", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("::ffff:192.0.2.c0", err);
+	a = praktor::ip::address("::ffff:192.0.2.c0", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("::ffff:192.0.2", err);
+	a = praktor::ip::address("::ffff:192.0.2", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("::ffff:192.0.2.1.3", err);
+	a = praktor::ip::address("::ffff:192.0.2.1.3", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("::ffff:192.0.2:1", err);
+	a = praktor::ip::address("::ffff:192.0.2:1", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
-	a = async::ip::address("::ffff:192.0.2:1::", err);
+	a = praktor::ip::address("::ffff:192.0.2:1::", err);
 	CHECK(err);
-	CHECK(err == async::errc::ill_formed_address);
+	CHECK(err == praktor::errc::ill_formed_address);
 
 	// make sure err gets cleared if successful
 
-	a = async::ip::address{"::FFFF:c0:0:2:1", err};
+	a = praktor::ip::address{"::FFFF:c0:0:2:1", err};
 	CHECK(!err);
 	CHECK(a.to_string() == "::ffff:c0:0:2:1");
 }

@@ -27,7 +27,7 @@
 #include "timer_uv.h"
 #include "udp_uv.h"
 
-using async::ip::address;
+using praktor::ip::address;
 
 void
 resolve_req_uv::start(uv_loop_t* lp, std::error_code& err)
@@ -110,7 +110,7 @@ loop_uv::really_create_timer(std::error_code& err)
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -137,7 +137,7 @@ loop_uv::really_create_timer(std::error_code& err, timer::handler&& handler)
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -164,11 +164,11 @@ loop_uv::really_create_timer_void(std::error_code& err, timer::void_handler&& ha
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 	result = util::make_shared<timer_uv>(
-			m_uv_loop, err, [=, handler{std::move(handler)}](async::timer::ptr) { handler(); });
+			m_uv_loop, err, [=, handler{std::move(handler)}](praktor::timer::ptr) { handler(); });
 	result->init(result);
 	if (err)
 		goto exit;
@@ -184,7 +184,7 @@ loop_uv::really_run(std::error_code& err)
 	int result = 0;
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -204,7 +204,7 @@ loop_uv::really_run_once(std::error_code& err)
 	int result = 0;
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -224,7 +224,7 @@ loop_uv::really_run_nowait(std::error_code& err)
 	int result = 0;
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -243,7 +243,7 @@ loop_uv::really_stop(std::error_code& err)
 	err.clear();
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 	}
 	uv_stop(m_uv_loop);
 exit:
@@ -297,7 +297,7 @@ loop_uv::really_close(std::error_code& err)    // probably should NOT be called 
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -331,7 +331,7 @@ loop_uv::really_create_acceptor(std::error_code& err)
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -355,7 +355,7 @@ exit:
 
 // 	if (!m_uv_loop)
 // 	{
-// 		err = make_error_code(async::errc::loop_closed);
+// 		err = make_error_code(praktor::errc::loop_closed);
 // 		goto exit;
 // 	}
 
@@ -379,7 +379,7 @@ loop_uv::really_create_acceptor(options const& opt, std::error_code& err, accept
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -407,7 +407,7 @@ loop_uv::really_connect_channel(options const& opt, std::error_code& err, channe
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -435,7 +435,7 @@ loop_uv::setup_transceiver(options const& opts, std::error_code& err)
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -503,7 +503,7 @@ loop_uv::really_resolve(std::string const& hostname, std::error_code& err, resol
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -557,7 +557,7 @@ loop_uv::really_dispatch(std::error_code& err, loop::dispatch_handler&& handler)
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -589,7 +589,7 @@ loop_uv::really_dispatch_void(std::error_code& err, loop::dispatch_void_handler&
 
 	if (!m_uv_loop)
 	{
-		err = make_error_code(async::errc::loop_closed);
+		err = make_error_code(praktor::errc::loop_closed);
 		goto exit;
 	}
 
@@ -619,10 +619,10 @@ void
 loop_uv::really_schedule(
 		std::chrono::milliseconds                 timeout,
 		std::error_code&                          err,
-		async::loop::scheduled_handler&& handler)
+		praktor::loop::scheduled_handler&& handler)
 {
 	auto tp = really_create_timer(
-			err, [=, handler{std::move(handler)}](async::timer::ptr) { handler(m_data.get_loop_ptr()); });
+			err, [=, handler{std::move(handler)}](praktor::timer::ptr) { handler(m_data.get_loop_ptr()); });
 	if (err)
 		goto exit;
 	tp->start(timeout, err);
@@ -634,9 +634,9 @@ void
 loop_uv::really_schedule_void(
 		std::chrono::milliseconds                      timeout,
 		std::error_code&                               err,
-		async::loop::scheduled_void_handler&& handler)
+		praktor::loop::scheduled_void_handler&& handler)
 {
-	auto tp = really_create_timer(err, [handler{std::move(handler)}](async::timer::ptr) { handler(); });
+	auto tp = really_create_timer(err, [handler{std::move(handler)}](praktor::timer::ptr) { handler(); });
 	if (err)
 		goto exit;
 	tp->start(timeout, err);

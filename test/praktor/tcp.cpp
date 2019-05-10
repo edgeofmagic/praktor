@@ -24,24 +24,24 @@
 
 #include <doctest.h>
 #include <iostream>
-#include <async/loop.h>
-#include <async/tcp.h>
+#include <praktor/loop.h>
+#include <praktor/tcp.h>
 #include <util/buffer.h>
 
-using namespace async;
+using namespace praktor;
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality }")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { basic functionality }")
 {
 	bool acceptor_handler_did_execute{false};
 	bool channel_connect_handler_did_execute{false};
 	bool channel_close_handler_did_execute{false};
 
-	async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
+	praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
 
 	std::error_code err;
 	auto            lp = loop::create();
 
-	auto loop_exit_timer = lp->create_timer(err, [&](async::timer::ptr tp) {
+	auto loop_exit_timer = lp->create_timer(err, [&](praktor::timer::ptr tp) {
 		tp->loop()->stop(err);
 		CHECK(!err);
 	});
@@ -49,9 +49,9 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality }")
 	loop_exit_timer->start(std::chrono::milliseconds{2000}, err);
 	CHECK(!err);
 
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
 	auto                lstnr = lp->create_acceptor(
-            async::options{listen_ep},
+            praktor::options{listen_ep},
             err,
             [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
                 CHECK(!err);
@@ -69,10 +69,10 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality }")
 	}
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		std::cout << "connect_ep: " << connect_ep.to_string() << std::endl;
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
 			std::error_code ec;
 			auto peer_ep = chan->get_peer_endpoint(ec);
@@ -104,18 +104,18 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality explicit bind and listen}")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { basic functionality explicit bind and listen}")
 {
 	bool acceptor_handler_did_execute{false};
 	bool channel_connect_handler_did_execute{false};
 	bool channel_close_handler_did_execute{false};
 
-	async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
+	praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
 
 	std::error_code err;
 	auto            lp = loop::create();
 
-	auto loop_exit_timer = lp->create_timer(err, [&](async::timer::ptr tp) {
+	auto loop_exit_timer = lp->create_timer(err, [&](praktor::timer::ptr tp) {
 		tp->loop()->stop(err);
 		CHECK(!err);
 	});
@@ -123,11 +123,11 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality explicit bind and
 	loop_exit_timer->start(std::chrono::milliseconds{2000}, err);
 	CHECK(!err);
 
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
 	auto                lstnr = lp->create_acceptor(err);
 	if (err) std::cout << "err on create_acceptor is " << err.message() << std::endl;
 	CHECK(!err);
-	lstnr->bind(async::options{listen_ep}, err);
+	lstnr->bind(praktor::options{listen_ep}, err);
 	if (err) std::cout << "err on bind is " << err.message() << std::endl;
 	CHECK(!err);
 	lstnr->listen(err, [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
@@ -138,7 +138,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality explicit bind and
 		acceptor_handler_did_execute = true;
 	});
 
-	// async::options{listen_ep},
+	// praktor::options{listen_ep},
 	// err,
 	// [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
 	//     CHECK(!err);
@@ -153,10 +153,10 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality explicit bind and
 	if (err) std::cout << "err on listen is " << err.message() << std::endl;
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		std::cout << "connect_ep: " << connect_ep.to_string() << std::endl;
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
 			std::error_code ec;
 			auto peer_ep = chan->get_peer_endpoint(ec);
@@ -188,7 +188,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { basic functionality explicit bind and
 	CHECK(!err);
 }
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address }")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { error on bad address }")
 {
 	bool acceptor_handler_did_execute{false};
 	bool channel_connect_handler_did_execute{false};
@@ -198,7 +198,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address }")
 	auto            lp = loop::create();
 
 
-	auto loop_exit_timer = lp->create_timer(err, [&](async::timer::ptr tp) {
+	auto loop_exit_timer = lp->create_timer(err, [&](praktor::timer::ptr tp) {
 		tp->loop()->stop(err);
 		CHECK(!err);
 	});
@@ -206,9 +206,9 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address }")
 	loop_exit_timer->start(std::chrono::milliseconds{2000}, err);
 	CHECK(!err);
 
-	async::ip::endpoint listen_ep{async::ip::address{"11.42.53.5"}, 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address{"11.42.53.5"}, 7001};
 	auto                lstnr = lp->create_acceptor(
-            async::options{listen_ep},
+            praktor::options{listen_ep},
             err,
             [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
                 CHECK(!err);
@@ -225,11 +225,11 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address }")
 		lstnr->close();
 	}
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
 
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(err);
 			CHECK(err == std::errc::connection_refused);
 			CHECK(chan);
@@ -256,7 +256,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address explicit bind }")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { error on bad address explicit bind }")
 {
 	bool acceptor_handler_did_execute{false};
 	bool channel_connect_handler_did_execute{false};
@@ -266,7 +266,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address explicit bind }"
 	auto            lp = loop::create();
 
 
-	auto loop_exit_timer = lp->create_timer(err, [&](async::timer::ptr tp) {
+	auto loop_exit_timer = lp->create_timer(err, [&](praktor::timer::ptr tp) {
 		tp->loop()->stop(err);
 		CHECK(!err);
 	});
@@ -274,9 +274,9 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address explicit bind }"
 	loop_exit_timer->start(std::chrono::milliseconds{2000}, err);
 	CHECK(!err);
 
-	async::ip::endpoint listen_ep{async::ip::address{"11.42.53.5"}, 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address{"11.42.53.5"}, 7001};
 	auto                lstnr = lp->create_acceptor(err);
-	lstnr->bind(async::options{listen_ep}, err);
+	lstnr->bind(praktor::options{listen_ep}, err);
 
 	REQUIRE(err);
 	REQUIRE(err == std::errc::address_not_available);
@@ -286,11 +286,11 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address explicit bind }"
 		lstnr->close();
 	}
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
 
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(err);
 			CHECK(err == std::errc::connection_refused);
 			CHECK(chan);
@@ -319,7 +319,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { error on bad address explicit bind }"
 
 
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write }")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { connect read write }")
 {
 	bool acceptor_connection_handler_did_execute{false};
 	bool acceptor_read_handler_did_execute{false};
@@ -331,9 +331,9 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write }")
 
 	std::error_code     err;
 	auto                lp = loop::create();
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
 	auto                lstnr = lp->create_acceptor(
-            async::options{listen_ep},
+            praktor::options{listen_ep},
             err,
             [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
                 CHECK(!err);
@@ -361,14 +361,14 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write }")
 
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
 
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
 
-			chan->on_close([&](async::channel::ptr chan)
+			chan->on_close([&](praktor::channel::ptr chan)
 			{
 				channel_close_handler_did_execute = true;
 			});
@@ -398,7 +398,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write }")
 	});
 	CHECK(!err);
 
-	auto shutdown_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto shutdown_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		lp->stop(err);
 		CHECK(!err);
@@ -428,7 +428,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write }")
 	CHECK(!err);
 }
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write explicit bind and listen }")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { connect read write explicit bind and listen }")
 {
 	bool acceptor_connection_handler_did_execute{false};
 	bool acceptor_read_handler_did_execute{false};
@@ -440,10 +440,10 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write explicit bind and 
 
 	std::error_code     err;
 	auto                lp = loop::create();
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
 	auto                lstnr = lp->create_acceptor(err);
 	CHECK(!err);
-	lstnr->bind(async::options{listen_ep}, err);
+	lstnr->bind(praktor::options{listen_ep}, err);
 	CHECK(!err);
 	lstnr->listen(err, [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
 		CHECK(!err);
@@ -471,14 +471,14 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write explicit bind and 
 
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
 
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
 
-			chan->on_close([&](async::channel::ptr chan)
+			chan->on_close([&](praktor::channel::ptr chan)
 			{
 				channel_close_handler_did_execute = true;
 			});
@@ -508,7 +508,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write explicit bind and 
 	});
 	CHECK(!err);
 
-	auto shutdown_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto shutdown_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		lp->stop(err);
 		CHECK(!err);
@@ -538,7 +538,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write explicit bind and 
 	CHECK(!err);
 }
 
-TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write multi-buffer }")
+TEST_CASE("praktor::tcp_acceptor [ smoke ] { connect read write multi-buffer }")
 {
 	bool acceptor_connection_handler_did_execute{false};
 	bool acceptor_read_handler_did_execute{false};
@@ -549,9 +549,9 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write multi-buffer }")
 
 	std::error_code     err;
 	auto                lp = loop::create();
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
 	auto                lstnr = lp->create_acceptor(
-            async::options{listen_ep},
+            praktor::options{listen_ep},
             err,
             [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
                 CHECK(!err);
@@ -585,10 +585,10 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write multi-buffer }")
 
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
-		lp->connect_channel(async::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
+		lp->connect_channel(praktor::options{connect_ep}, err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
 
 			std::error_code rwerr;
@@ -619,7 +619,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write multi-buffer }")
 
 	CHECK(!err);
 
-	auto shutdown_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto shutdown_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		lp->stop(err);
 		CHECK(!err);
@@ -649,7 +649,7 @@ TEST_CASE("async::tcp_acceptor [ smoke ] { connect read write multi-buffer }")
 	CHECK(channel_write_handler_did_execute);
 }
 
-TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write }")
+TEST_CASE("praktor::tcp_framing_acceptor [ smoke ] { framing connect read write }")
 {
 	bool acceptor_connection_handler_did_execute{false};
 	bool acceptor_read_handler_did_execute{false};
@@ -660,10 +660,10 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write }"
 
 	std::error_code     err;
 	auto                lp = loop::create();
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
-	// async::options listen_opt{listen_ep}.framing(true);
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
+	// praktor::options listen_opt{listen_ep}.framing(true);
 	auto lstnr = lp->create_acceptor(
-			async::options::create(listen_ep).framing(true),
+			praktor::options::create(listen_ep).framing(true),
 			err,
 			[&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
 				CHECK(!err);
@@ -694,10 +694,10 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write }"
 
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
-		async::options      connect_options{connect_ep};
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
+		praktor::options      connect_options{connect_ep};
 
 		lp->connect_channel(connect_options.framing(true), err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
@@ -728,7 +728,7 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write }"
 	});
 	CHECK(!err);
 
-	auto shutdown_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto shutdown_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		lp->stop(err);
 		CHECK(!err);
@@ -757,7 +757,7 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write }"
 	CHECK(!err);
 }
 
-TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write explict bind and listen }")
+TEST_CASE("praktor::tcp_framing_acceptor [ smoke ] { framing connect read write explict bind and listen }")
 {
 	bool acceptor_connection_handler_did_execute{false};
 	bool acceptor_read_handler_did_execute{false};
@@ -768,11 +768,11 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write ex
 
 	std::error_code     err;
 	auto                lp = loop::create();
-	async::ip::endpoint listen_ep{async::ip::address::v4_any(), 7001};
-	// async::options listen_opt{listen_ep}.framing(true);
+	praktor::ip::endpoint listen_ep{praktor::ip::address::v4_any(), 7001};
+	// praktor::options listen_opt{listen_ep}.framing(true);
 	auto lstnr = lp->create_acceptor(err);
 	CHECK(!err);
-	lstnr->bind(async::options::create(listen_ep).framing(true), err);
+	lstnr->bind(praktor::options::create(listen_ep).framing(true), err);
 	CHECK(!err);
 	lstnr->listen(err, [&](acceptor::ptr const& ls, channel::ptr const& chan, std::error_code const& err) {
 		CHECK(!err);
@@ -802,10 +802,10 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write ex
 
 	CHECK(!err);
 
-	auto connect_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto connect_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code     err;
-		async::ip::endpoint connect_ep{async::ip::address::v4_loopback(), 7001};
-		async::options      connect_options{connect_ep};
+		praktor::ip::endpoint connect_ep{praktor::ip::address::v4_loopback(), 7001};
+		praktor::options      connect_options{connect_ep};
 
 		lp->connect_channel(connect_options.framing(true), err, [&](channel::ptr const& chan, std::error_code const& err) {
 			CHECK(!err);
@@ -836,7 +836,7 @@ TEST_CASE("async::tcp_framing_acceptor [ smoke ] { framing connect read write ex
 	});
 	CHECK(!err);
 
-	auto shutdown_timer = lp->create_timer(err, [&](async::timer::ptr timer_ptr) {
+	auto shutdown_timer = lp->create_timer(err, [&](praktor::timer::ptr timer_ptr) {
 		std::error_code err;
 		lp->stop(err);
 		CHECK(!err);

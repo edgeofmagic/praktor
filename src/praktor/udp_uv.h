@@ -22,20 +22,20 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_UDP_UV_H
-#define ASYNC_UDP_UV_H
+#ifndef PRAKTOR_UDP_UV_H
+#define PRAKTOR_UDP_UV_H
 
 #include "uv_error.h"
 #include <boost/endian/conversion.hpp>
-#include <async/endpoint.h>
-#include <async/options.h>
-#include <async/transceiver.h>
+#include <praktor/endpoint.h>
+#include <praktor/options.h>
+#include <praktor/transceiver.h>
 #include <uv.h>
 
-using async::ip::endpoint;
+using praktor::ip::endpoint;
 using util::mutable_buffer;
-using async::transceiver;
-using async::options;
+using praktor::transceiver;
+using praktor::options;
 
 class udp_transceiver_uv;
 
@@ -78,7 +78,7 @@ private:
 class udp_send_bufs_req_uv
 {
 public:
-	udp_send_bufs_req_uv(std::deque<mutable_buffer>&& bufs, endpoint const& ep, async::transceiver::send_buffers_handler handler)
+	udp_send_bufs_req_uv(std::deque<mutable_buffer>&& bufs, endpoint const& ep, praktor::transceiver::send_buffers_handler handler)
 		: m_send_handler{std::move(handler)},
 		  m_buffers{std::move(bufs)},
 		  m_uv_buffers{new uv_buf_t[m_buffers.size()]}
@@ -201,7 +201,7 @@ protected:
 	virtual void
 	stop_receive() override;
 
-	virtual std::shared_ptr<async::loop>
+	virtual std::shared_ptr<praktor::loop>
 	loop() override;
 
 	virtual bool
@@ -281,4 +281,4 @@ protected:
 	uv_udp_t                     m_udp_handle;
 };
 
-#endif    // ASYNC_UDP_UV_H
+#endif    // PRAKTOR_UDP_UV_H

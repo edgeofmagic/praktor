@@ -35,7 +35,7 @@ exit:
 	return;
 }
 
-timer_uv::timer_uv(uv_loop_t* lp, std::error_code& err, async::timer::handler handler) : m_handler{std::move(handler)}
+timer_uv::timer_uv(uv_loop_t* lp, std::error_code& err, praktor::timer::handler handler) : m_handler{std::move(handler)}
 {
 	err.clear();
 	auto status = uv_timer_init(lp, &m_uv_timer);
@@ -102,7 +102,7 @@ timer_uv::start(std::chrono::milliseconds timeout)
 }
 
 void
-timer_uv::start(std::chrono::milliseconds timeout, std::error_code& err, async::timer::handler handler)
+timer_uv::start(std::chrono::milliseconds timeout, std::error_code& err, praktor::timer::handler handler)
 {
 	int status = 0;
 	err.clear();
@@ -128,7 +128,7 @@ exit:
 }
 
 void
-timer_uv::start(std::chrono::milliseconds timeout, async::timer::handler handler)
+timer_uv::start(std::chrono::milliseconds timeout, praktor::timer::handler handler)
 {
 	int status = 0;
 
@@ -148,7 +148,7 @@ timer_uv::start(std::chrono::milliseconds timeout, async::timer::handler handler
 }
 
 void
-timer_uv::start(std::chrono::milliseconds timeout, std::error_code& err, async::timer::void_handler handler)
+timer_uv::start(std::chrono::milliseconds timeout, std::error_code& err, praktor::timer::void_handler handler)
 {
 	int status = 0;
 	err.clear();
@@ -165,7 +165,7 @@ timer_uv::start(std::chrono::milliseconds timeout, std::error_code& err, async::
 		goto exit;
 	}
 
-	m_handler = [=, handler{std::move(handler)}](async::timer::ptr) { handler(); };
+	m_handler = [=, handler{std::move(handler)}](praktor::timer::ptr) { handler(); };
 	status = uv_timer_start(&m_uv_timer, on_timer_expire, timeout.count(), 0);
 	UV_ERROR_CHECK(status, err, exit);
 
@@ -174,7 +174,7 @@ exit:
 }
 
 void
-timer_uv::start(std::chrono::milliseconds timeout, async::timer::void_handler handler)
+timer_uv::start(std::chrono::milliseconds timeout, praktor::timer::void_handler handler)
 {
 	int status = 0;
 
@@ -188,7 +188,7 @@ timer_uv::start(std::chrono::milliseconds timeout, async::timer::void_handler ha
 		throw std::system_error{make_error_code(std::errc::operation_in_progress)};
 	}
 
-	m_handler = [=, handler{std::move(handler)}](async::timer::ptr) { handler(); };
+	m_handler = [=, handler{std::move(handler)}](praktor::timer::ptr) { handler(); };
 	status = uv_timer_start(&m_uv_timer, on_timer_expire, timeout.count(), 0);
 	UV_ERROR_THROW(status);
 }
@@ -218,7 +218,7 @@ timer_uv::stop()
 	}
 }
 
-std::shared_ptr<async::loop>
+std::shared_ptr<praktor::loop>
 timer_uv::loop()
 {
 	return reinterpret_cast<loop_data*>(reinterpret_cast<uv_handle_t*>(&m_uv_timer)->loop->data)->get_loop_ptr();

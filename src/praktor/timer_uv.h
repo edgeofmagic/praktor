@@ -22,11 +22,11 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_TIMER_UV_H
-#define ASYNC_TIMER_UV_H
+#ifndef PRAKTOR_TIMER_UV_H
+#define PRAKTOR_TIMER_UV_H
 
 #include "uv_error.h"
-#include <async/timer.h>
+#include <praktor/timer.h>
 #include <uv.h>
 
 class timer_uv;
@@ -36,14 +36,14 @@ struct timer_handle_data
 	util::shared_ptr<timer_uv> m_impl_ptr;
 };
 
-class timer_uv : public async::timer
+class timer_uv : public praktor::timer
 {
 public:
 	using ptr = util::shared_ptr<timer_uv>;
 
 	timer_uv(uv_loop_t* lp, std::error_code& err);
 
-	timer_uv(uv_loop_t* lp, std::error_code& err, async::timer::handler handler);
+	timer_uv(uv_loop_t* lp, std::error_code& err, praktor::timer::handler handler);
 
 	virtual ~timer_uv();
 
@@ -61,16 +61,16 @@ private:
 	start(std::chrono::milliseconds timeout) override;
 
 	virtual void
-	start(std::chrono::milliseconds timeout, std::error_code& err, async::timer::handler handler) override;
+	start(std::chrono::milliseconds timeout, std::error_code& err, praktor::timer::handler handler) override;
 
 	virtual void
-	start(std::chrono::milliseconds timeout, async::timer::handler handler) override;
+	start(std::chrono::milliseconds timeout, praktor::timer::handler handler) override;
 
 	virtual void
-	start(std::chrono::milliseconds timeout, std::error_code& err, async::timer::void_handler handler) override;
+	start(std::chrono::milliseconds timeout, std::error_code& err, praktor::timer::void_handler handler) override;
 
 	virtual void
-	start(std::chrono::milliseconds timeout, async::timer::void_handler handler) override;
+	start(std::chrono::milliseconds timeout, praktor::timer::void_handler handler) override;
 
 	virtual void
 	stop(std::error_code& err) override;
@@ -81,7 +81,7 @@ private:
 	virtual void
 	close() override;
 
-	virtual std::shared_ptr<async::loop>
+	virtual std::shared_ptr<praktor::loop>
 	loop() override;
 
 	bool
@@ -98,7 +98,7 @@ private:
 
 	uv_timer_t                       m_uv_timer;
 	timer_handle_data                m_data;
-	async::timer::handler m_handler;
+	praktor::timer::handler m_handler;
 };
 
-#endif    // ASYNC_TIMER_UV_H
+#endif    // PRAKTOR_TIMER_UV_H

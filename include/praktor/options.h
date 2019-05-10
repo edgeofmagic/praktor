@@ -22,14 +22,14 @@
  * THE SOFTWARE.
  */
 
-#ifndef ASYNC_OPTIONS_H
-#define ASYNC_OPTIONS_H
+#ifndef PRAKTOR_OPTIONS_H
+#define PRAKTOR_OPTIONS_H
 
-#include <async/endpoint.h>
+#include <praktor/endpoint.h>
 #include <memory>
 
 
-namespace async
+namespace praktor
 {
 
 class options
@@ -125,6 +125,6 @@ private:
 	std::chrono::seconds m_keepalive_time;
 };
 
-}    // namespace async
+}    // namespace praktor
 
-#endif    // ASYNC_OPTIONS_H
+#endif    // PRAKTOR_OPTIONS_H

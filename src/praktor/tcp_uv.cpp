@@ -103,7 +103,7 @@ tcp_base_uv::really_get_endpoint(std::error_code& err)
 	return result;
 }
 
-std::shared_ptr<async::loop>
+std::shared_ptr<praktor::loop>
 tcp_base_uv::get_loop()
 {
 	return reinterpret_cast<loop_data*>(reinterpret_cast<uv_handle_t*>(&m_tcp_handle)->loop->data)->get_loop_ptr();
@@ -169,7 +169,7 @@ tcp_channel_uv::on_allocate(uv_handle_t* handle, size_t suggested_size, uv_buf_t
 }
 
 bool
-tcp_channel_uv::really_close(async::channel::close_handler&& handler)
+tcp_channel_uv::really_close(praktor::channel::close_handler&& handler)
 {
 	bool result{false};
 	if (!uv_is_closing(get_handle()))
@@ -200,7 +200,7 @@ tcp_channel_uv::is_closing()
 }
 
 void
-tcp_channel_uv::really_start_read(std::error_code& err, async::channel::read_handler&& handler)
+tcp_channel_uv::really_start_read(std::error_code& err, praktor::channel::read_handler&& handler)
 {
 	err.clear();
 	m_read_handler = std::move(handler);
@@ -221,7 +221,7 @@ void
 tcp_channel_uv::really_write(
 		util::mutable_buffer&&                 buf,
 		std::error_code&                       err,
-		async::channel::write_buffer_handler&& handler)
+		praktor::channel::write_buffer_handler&& handler)
 {
 	err.clear();
 	auto request = new tcp_write_buf_req_uv{std::move(buf), std::move(handler)};
@@ -237,7 +237,7 @@ void
 tcp_channel_uv::really_write(
 		std::deque<util::mutable_buffer>&&      bufs,
 		std::error_code&                        err,
-		async::channel::write_buffers_handler&& handler)
+		praktor::channel::write_buffers_handler&& handler)
 {
 	err.clear();
 	auto request = new tcp_write_bufs_req_uv{std::move(bufs), std::move(handler)};
@@ -380,7 +380,7 @@ tcp_framed_channel_uv::read_to_frame(ptr channel_ptr, util::const_buffer&& buf)
 }
 
 void
-tcp_framed_channel_uv::really_start_read(std::error_code& err, async::channel::read_handler&& handler)
+tcp_framed_channel_uv::really_start_read(std::error_code& err, praktor::channel::read_handler&& handler)
 {
 	err.clear();
 	m_read_handler = std::move(handler);
@@ -395,11 +395,11 @@ class on_write_buffers
 {
 public:
 
-	on_write_buffers(async::channel::write_buffer_handler handler) : m_handler{std::move(handler)}
+	on_write_buffers(praktor::channel::write_buffer_handler handler) : m_handler{std::move(handler)}
 	{}
 
 	void
-	operator()(async::channel::ptr const& chan, std::deque<util::mutable_buffer>&& bufs, std::error_code const& err)
+	operator()(praktor::channel::ptr const& chan, std::deque<util::mutable_buffer>&& bufs, std::error_code const& err)
 	{
 		if (m_handler)
 		{
@@ -408,7 +408,7 @@ public:
 	}
 
 private:
-	async::channel::write_buffer_handler m_handler;
+	praktor::channel::write_buffer_handler m_handler;
 };
 
 
@@ -416,7 +416,7 @@ void
 tcp_framed_channel_uv::really_write(
 		util::mutable_buffer&&                 buf,
 		std::error_code&                       err,
-		async::channel::write_buffer_handler&& handler)
+		praktor::channel::write_buffer_handler&& handler)
 {
 	err.clear();
 	std::deque<util::mutable_buffer> frame_bufs;
@@ -437,7 +437,7 @@ void
 tcp_framed_channel_uv::really_write(
 		std::deque<util::mutable_buffer>&&      bufs,
 		std::error_code&                        err,
-		async::channel::write_buffers_handler&& handler)
+		praktor::channel::write_buffers_handler&& handler)
 {
 	err.clear();
 	std::uint64_t frame_size{0};
@@ -533,7 +533,7 @@ tcp_acceptor_uv::on_framing_connection(uv_stream_t* handle, int stat)
 }
 
 bool
-tcp_acceptor_uv::really_close(async::acceptor::close_handler&& handler)
+tcp_acceptor_uv::really_close(praktor::acceptor::close_handler&& handler)
 {
 	bool result{false};
 	if (!uv_is_closing(get_handle()))
@@ -558,7 +558,7 @@ tcp_acceptor_uv::really_close()
 }
 
 void
-tcp_acceptor_uv::really_bind(async::options const& opts, std::error_code& err)
+tcp_acceptor_uv::really_bind(praktor::options const& opts, std::error_code& err)
 {
 	err.clear();
 	m_is_framing = opts.framing();
