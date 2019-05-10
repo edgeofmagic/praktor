@@ -1,0 +1,9 @@
+{
+	"cmake.configureOnOpen": true,
+	"C_Cpp.configurationWarnings": "Disabled",
+	"cmake.ctestArgs": [
+		"-V"
+	],
+	"cmake.buildToolArgs": [],
+	"C_Cpp.intelliSenseEngineFallback": "Enabled"
+}

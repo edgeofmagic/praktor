@@ -1,0 +1,80 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "(lldb) Launch async UDP",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/async_test",
+			"args": ["--test-case=*async::udp*"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		},
+		{
+			"name": "(lldb) Launch async loop",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/async_test",
+			"args": ["--test-case=*async::loop*"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		},
+		{
+			"name": "(lldb) Launch async event",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/async_test",
+			"args": ["--test-case=*async::event*"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		},
+		{
+			"name": "(lldb) Launch async event_flow",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/async_test",
+			"args": ["--test-case=*async::event_flow*"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		},
+		{
+			"name": "(lldb) Launch async TCP",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/async_test",
+			"args": ["--test-case=*async::tcp*"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		},
+		{
+			"name": "(lldb) Launch",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/async_test",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/build",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		}
+	]
+}

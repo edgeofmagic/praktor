@@ -1,0 +1,179 @@
+
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Test All",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test detailed",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+				"--test-case=*close/cancel before expire*"
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test Async Loop",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+				"--test-case=*async::loop*"
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+		},
+        {
+            "label": "Test Events",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+				"--test-case=*async::event*"
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+		},
+        {
+            "label": "Test Event Flow",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+				"--test-case=*async::event_flow*"
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+		},
+		{
+            "label": "Test UDP",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+				"--test-case=*async::udp*"
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+		},
+		{
+            "label": "Test TCP stream",
+            "type": "process",
+            "command": "./async_test",
+            "args": [
+				"--test-case=*async::tcp_stream*"
+            ],
+            "group": "test",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build",
+				"env": {
+					"ASAN_OPTIONS" : "detect_leaks=1"
+				}
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+		},
+    	{
+            "label": "Build Doxygen Docs",
+            "type": "process",
+            "command": "make",
+            "args": [
+				"async_doc"
+            ],
+            "group": "build",
+            "options": 
+            {
+				"cwd": "${workspaceFolder}/build"
+            },
+            "presentation": 
+            {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        }    ]
+}
