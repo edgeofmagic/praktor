@@ -7,6 +7,7 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "CMAKE_HOME_DIRECTORY = ${CMAKE_HOME_DIRECTORY}")
 
 	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+		set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fsanitize=address")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 #	else()
 #		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")
@@ -14,13 +15,23 @@ message(STATUS "CMAKE_HOME_DIRECTORY = ${CMAKE_HOME_DIRECTORY}")
 
 enable_testing()
 
-include(scripts/doutil.cmake)
-
 # add_subdirectory( ext/libuv EXCLUDE_FROM_ALL)
+
+set(Boost_USE_STATIC_LIBS   ON)
+
+set(Boost_NO_SYSTEM_PATHS TRUE)
+if (Boost_NO_SYSTEM_PATHS)
+	set(BOOST_ROOT "${CMAKE_HOME_DIRECTORY}/../boost_1_68_0_install")
+endif (Boost_NO_SYSTEM_PATHS)
+
+find_package(Boost 1.68.0 REQUIRED system)
+
+include(scripts/doutil.cmake)
 
 include_directories( 
 	include 
-	ext/boost 
+	${Boost_INCLUDE_DIRS}
+#	ext/boost 
 #	ext/libuv/include 
 #	ext/util/include
 	${libuv_SOURCE_DIR}/include
