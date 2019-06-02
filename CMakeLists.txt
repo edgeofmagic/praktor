@@ -15,8 +15,6 @@ message(STATUS "CMAKE_HOME_DIRECTORY = ${CMAKE_HOME_DIRECTORY}")
 
 enable_testing()
 
-# add_subdirectory( ext/libuv EXCLUDE_FROM_ALL)
-
 set(Boost_USE_STATIC_LIBS   ON)
 
 set(Boost_NO_SYSTEM_PATHS TRUE)
@@ -31,9 +29,6 @@ include(scripts/doutil.cmake)
 include_directories( 
 	include 
 	${Boost_INCLUDE_DIRS}
-#	ext/boost 
-#	ext/libuv/include 
-#	ext/util/include
 	${libuv_SOURCE_DIR}/include
 	${util_SOURCE_DIR}/include
 	ext/doctest/include)
@@ -58,7 +53,7 @@ set(PRAKTOR_TEST_SRCS
 add_library(praktor ${PRAKTOR_SRCS})
 
 add_executable(praktor_test ${PRAKTOR_TEST_SRCS})
-target_link_libraries(praktor_test praktor uv_a util)
+target_link_libraries(praktor_test praktor uv_a)
 
 add_test(NAME praktor_test COMMAND praktor_test )
 SET_TESTS_PROPERTIES(praktor_test
