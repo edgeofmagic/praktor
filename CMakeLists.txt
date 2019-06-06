@@ -15,7 +15,7 @@ message(STATUS "CMAKE_HOME_DIRECTORY = ${CMAKE_HOME_DIRECTORY}")
 
 enable_testing()
 
-set(Boost_USE_STATIC_LIBS   ON)
+# set(Boost_USE_STATIC_LIBS   ON)
 
 set(Boost_NO_SYSTEM_PATHS TRUE)
 if (Boost_NO_SYSTEM_PATHS)
